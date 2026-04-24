@@ -66,6 +66,18 @@ console.log(findFirstAndLast(arr,target))     // { first: 2, last: 5 }
 // Space: O(1)
 
 
+// 🎯 FINAL INTERVIEW ANSWER
+
+// If interviewer asks:
+
+// ❓ “How do you find first & last occurrence?”
+
+// 👉 You say:
+
+// “If unsorted, I’ll use linear scan in O(n).
+// If sorted, I’ll use modified binary search in O(log n), where I continue searching left/right after finding the target to locate boundaries.”
+
+
 function findBound(arr, target, isFirst) {
     let left = 0, right = arr.length - 1;
     let res = -1;
@@ -114,3 +126,24 @@ console.log(findRange([1,2,2,2,3,4], 2));
 // 👉 Then add:
 
 // “If the array is sorted, I can optimize using binary search to O(log n) by finding left and right boundaries.”
+
+
+
+
+
+// using linear search in Unsorted Array
+
+
+
+function findFirstAndLast(arr, target) {
+    let first = -1, last = -1;
+
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === target) {
+            if (first === -1) first = i;
+            last = i;
+        }
+    }
+
+    return { first, last };
+}
