@@ -10,3 +10,4 @@ function isPalindrome(s){
     return newStr === s  ? true : false
 }
 console.log(isPalindrome(str))
+
