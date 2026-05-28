@@ -1,0 +1,58 @@
+const express = require("express");
+
+const app = express();
+
+const requestsMap = new Map();
+
+const WINDOW_SIZE = 60 * 1000; // 1 minute
+const MAX_REQUESTS = 5;
+
+function rateLimiter(req, res, next) {
+  const ip = req.ip;
+  const currentTime = Date.now();
+
+  // Create user record if not exists
+  if (!requestsMap.has(ip)) {
+    requestsMap.set(ip, {
+      count: 1,
+      startTime: currentTime,
+    });
+
+    return next();
+  }
+
+  const userData = requestsMap.get(ip);
+
+  // Check if window expired
+  if (currentTime - userData.startTime > WINDOW_SIZE) {
+    userData.count = 1;
+    userData.startTime = currentTime;
+
+    return next();
+  }
+
+  // Check limit
+  if (userData.count >= MAX_REQUESTS) {
+    return res.status(429).json({
+      success: false,
+      message: "Too many requests",
+    });
+  }
+
+  // Increment request count
+  userData.count++;
+
+  next();
+}
+
+app.use(rateLimiter);
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "API working",
+  });
+});
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
